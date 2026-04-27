@@ -3,19 +3,28 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio — Inti Manassero</title>
+  <title>Inti Manassero — 3D Artist</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
   <style>
 
     /* =========================================================
-       RESET & TOKENS
+       RESET
     ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior: none; }
-    a         { -webkit-tap-highlight-color: transparent; color: inherit; text-decoration: none; }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    a         { -webkit-tap-highlight-color: transparent; }
     a:visited { color: inherit; }
     a:focus   { outline: none; }
 
+    /* =========================================================
+       TOKENS
+    ========================================================= */
     :root {
       --bg:           #0d0d0d;
       --bg2:          #141414;
@@ -51,15 +60,23 @@
       transition: background 0.35s ease, color 0.35s ease;
     }
 
-    /* noise */
+    /* =========================================================
+       NOISE OVERLAY
+    ========================================================= */
     body::before {
       content: '';
-      position: fixed; inset: 0; z-index: 4; pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 250px 250px; background-repeat: repeat;
-      mix-blend-mode: soft-light; opacity: 0.85;
+      background-size: 250px 250px;
+      background-repeat: repeat;
+      mix-blend-mode: soft-light;
+      opacity: 0.85;
       animation: noise-move 0.4s steps(1) infinite;
     }
+
     @keyframes noise-move {
       0%   { background-position:   0px   0px; }
       25%  { background-position: -30px  15px; }
@@ -72,238 +89,677 @@
        NAV
     ========================================================= */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      display: flex; justify-content: flex-end; align-items: center;
-      padding: 0.75rem 2rem; background: transparent;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2rem 0.75rem 0.5rem;
+      background: transparent;
     }
 
-    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
     .theme-toggle {
-      width: 40px; height: 22px; border-radius: 11px;
-      background: var(--toggle-bg); border: 0.5px solid var(--border-hover);
-      cursor: pointer; position: relative; flex-shrink: 0; transition: background 0.3s ease;
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      background: var(--toggle-bg);
+      border: 0.5px solid var(--border-hover);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
     }
+
     .theme-toggle::after {
-      content: ''; position: absolute; top: 3px; left: 3px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: var(--toggle-knob); transition: transform 0.3s ease;
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--toggle-knob);
+      transition: transform 0.3s ease, background 0.3s ease;
     }
+
     [data-theme="light"] .theme-toggle::after { transform: translateX(18px); }
 
     .hamburger {
-      display: flex; flex-direction: column; gap: 5px;
-      padding: 0.55rem 0.65rem; background: #0d0d0d;
-      border: none; border-radius: 4px; cursor: pointer; z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 0.55rem 0.65rem;
+      background: #0d0d0d;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      z-index: 1100;
     }
+
     .hamburger span {
-      display: block; width: 20px; height: 1.5px; background: #f0ede6;
-      transform-origin: center; transition: transform 0.3s ease, opacity 0.3s ease;
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: #f0ede6;
+      transform-origin: center;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
+
     .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-    /* NAV DRAWER */
+    /* =========================================================
+       NAV DRAWER
+    ========================================================= */
     .nav-drawer {
-      position: fixed; top: 0; right: 0;
-      width: clamp(260px, 80vw, 340px); height: 100vh;
-      z-index: 1050; background: var(--bg); border-left: 0.5px solid var(--border);
-      display: flex; flex-direction: column; justify-content: flex-end;
+      position: fixed;
+      top: 0; right: 0;
+      width: clamp(260px, 80vw, 340px);
+      height: 100vh;
+      z-index: 1050;
+      background: var(--bg);
+      border-left: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       padding: 4rem 3rem;
       transform: translateX(100%);
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
+
     .nav-drawer.open { transform: translateX(0); }
-    .nav-drawer-links { list-style: none; display: flex; flex-direction: column; margin-bottom: 3rem; }
+
+    .nav-drawer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 3rem;
+    }
+
     .nav-drawer-links li            { border-top: 0.5px solid var(--border-hover); }
     .nav-drawer-links li:last-child { border-bottom: 0.5px solid var(--border-hover); }
+
     .nav-drawer-links a {
-      display: block; padding: 1.2rem 0;
-      font-size: clamp(20px, 3vw, 28px); font-weight: 800;
-      letter-spacing: -0.5px; color: var(--text); transition: color 0.2s;
+      display: block;
+      padding: 1.2rem 0;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
     }
+
     .nav-drawer-links a:hover { color: var(--accent); }
-    .nav-drawer-links a.active { color: var(--accent); }
-    .nav-drawer-copyright { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 2rem; }
-    .nav-overlay {
-      position: fixed; inset: 0; z-index: 1040; background: rgba(0,0,0,0.4);
-      opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+
+    .nav-drawer-copyright {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2rem;
     }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1040;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
     .nav-overlay.open { opacity: 1; pointer-events: all; }
 
     /* =========================================================
-       PAGE HEADER
+       HERO
     ========================================================= */
-    .page-header {
-      padding: 8rem 5rem 3rem;
-      max-width: 1200px;
-      margin: 0 auto;
+    .hero {
+      height: 60vh;
+      min-height: 400px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
     }
 
-    .page-title {
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        /* noise texture via SVG */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+        /* warm gradient: lighter charcoal left, near-black right */
+        linear-gradient(105deg,
+          #2c2b28 0%,
+          #242320 30%,
+          #1a1917 60%,
+          #111110 100%);
+      background-size: 300px 300px, cover;
+      background-repeat: repeat, no-repeat;
+    }
+
+    /* if herobg.jpg is uploaded, it takes over */
+    .hero-bg.has-image {
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+        url('images/herobg.jpg');
+      background-size: 300px 300px, cover;
+      background-position: top left, 80% center;
+      background-repeat: repeat, no-repeat;
+    }
+
+    #hero { --grad-opacity: 0; }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: clamp(150px, 25vh, 320px);
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      z-index: 3;
+      pointer-events: none;
+      opacity: var(--grad-opacity);
+      transition: opacity 0.1s ease;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4% 4rem 47%;
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    .hero-cutout {
+      width: clamp(240px, 100%, 720px);
+      height: 135%;
+      object-fit: contain;
+      object-position: bottom left;
+      display: block;
+      margin-bottom: -15%;
+      mix-blend-mode: lighten;
+    }
+
+    .hero-title {
+      font-size: clamp(25px, 4.36vw, 60px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .hero-title em { font-style: normal; font-weight: 800; }
+
+    .hero-sub {
+      font-size: clamp(13px, 1.33vw, 19px);
+      color: var(--muted);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+      max-width: 90%;
+    }
+
+    /* Once herobg.png loads, switch to dark text legible over the light photo */
+    .hero-bg-loaded .hero-title { color: var(--text); }
+    .hero-bg-loaded .hero-sub   { color: var(--muted); }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: fit-content;
+      font-size: clamp(10px, 0.88vw, 12px);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      background: transparent;
+      border: 1.5px solid var(--border-hover);
+      padding: 0.825rem 1.65rem;
+      border-radius: 2px;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    /* =========================================================
+       DEMO REEL
+    ========================================================= */
+    .reel-section {
+      padding: 4rem 3rem 6rem;
+      position: relative;
+      z-index: 5;
+      scroll-margin-top: 0;
+    }
+
+    .reel-title {
+      text-align: center;
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       letter-spacing: -1px;
       line-height: 1.05;
-      margin-bottom: 0.5rem;
+      color: var(--text);
+      margin-bottom: 3rem;
     }
 
-    .page-subtitle {
-      font-size: 13px;
+    .reel-container { max-width: 960px; margin: 0 auto; }
+
+    .reel-wrapper {
+      position: relative;
+      padding-bottom: 100%;
+      height: 0;
+      overflow: hidden;
+      background: var(--bg3);
+    }
+
+    .reel-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* =========================================================
+       CAROUSEL
+    ========================================================= */
+    .carousel-section {
+      padding: 1.8rem 0 2.24rem;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+    }
+
+    .carousel-header {
+      text-align: center;
+      padding: 0 0 1.5rem;
+    }
+
+    .carousel-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .carousel-title em { font-style: normal; font-weight: 800; color: var(--text); }
+
+    .carousel-hint {
+      font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    .page-subtitle a {
-      color: var(--text);
-      border-bottom: 0.5px solid var(--border-hover);
-      padding-bottom: 1px;
-      transition: border-color 0.2s;
-    }
-    .page-subtitle a:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* =========================================================
-       PORTFOLIO GRID
-    ========================================================= */
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5px;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 0 6rem;
-    }
-
-    /* =========================================================
-       PROJECT CARD + HOVER EFFECT
-    ========================================================= */
-    .project-card {
+    .carousel-cf {
+      width: 100%;
+      height: clamp(260px, 45vw, 600px);
       position: relative;
-      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      perspective: clamp(800px, 120vw, 2000px);
+    }
+
+    .carousel-cf-track {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      transform-style: preserve-3d;
+      width: 0; height: 0;
+    }
+
+    .carousel-cf-item {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(200px, 28vw, 460px);
+      height: clamp(200px, 28vw, 460px);
+      border-radius: 18px;
       overflow: hidden;
       display: block;
+      text-decoration: none;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      will-change: transform, opacity;
+      cursor: pointer;
       background: var(--bg3);
     }
 
-    .project-card img,
-    .project-card video {
+    .carousel-cf-item img,
+    .carousel-cf-item video {
       width: 100%; height: 100%;
       object-fit: cover;
       object-position: center;
       display: block;
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
     }
 
-    .project-card.top-crop img,
-    .project-card.top-crop video   { object-position: top; }
-    .project-card.bottom-crop img,
-    .project-card.bottom-crop video { object-position: bottom; }
+    .carousel-cf-item.top-crop img,
+    .carousel-cf-item.top-crop video {
+      object-position: top;
+    }
 
-    /* overlay */
-    .project-card-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(13, 13, 13, 0.82);
+    .carousel-cf-item.bottom-crop img,
+    .carousel-cf-item.bottom-crop video {
+      object-position: bottom;
+    }
+
+    /* =========================================================
+       SECTIONS
+    ========================================================= */
+    .section { padding: clamp(3rem, 5vw, 6rem) 0; }
+
+    .section-header {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 2rem;
-      opacity: 0;
-      transition: opacity 0.35s ease;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0 0 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 0.5px solid var(--border);
     }
 
-    .project-card:hover .project-card-overlay { opacity: 1; }
-    .project-card:hover img,
-    .project-card:hover video { transform: scale(1.05); }
-
-    .project-card-title {
-      font-size: clamp(18px, 1.8vw, 26px);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-      transform: translateY(12px);
-      transition: transform 0.35s ease;
-    }
-
-    .project-card-meta {
-      font-size: 11px;
-      letter-spacing: 0.18em;
+    .section-label {
+      font-size: 16px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 1.2rem;
-      transform: translateY(12px);
-      transition: transform 0.38s ease;
     }
 
-    .project-card-cta {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
+    /* =========================================================
+       ABOUT / SKILLS GRID
+    ========================================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 5rem;
+    }
+
+    .about-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 2rem;
+    }
+
+    .about-title em { font-style: normal; font-weight: 800; color: var(--text); }
+
+    .about-text {
+      font-size: 19px;
+      line-height: 2;
+      color: rgba(240, 237, 230, 1);
+      margin-bottom: 1.5rem;
+      text-align: justify;
+    }
+
+    /* =========================================================
+       SKILLS BARS
+    ========================================================= */
+    .skills-label {
+      font-size: 14px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .skills-list { display: flex; flex-direction: column; }
+
+    .skill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 18px;
+    }
+
+    .skill-name { color: var(--muted); }
+    [data-theme="dark"] .skill-name { color: var(--text-dim, #d0cdc6); }
+
+    .skill-bar {
+      width: 80px; height: 2px;
+      background: var(--border-hover);
+      position: relative;
+    }
+
+    .skill-fill {
+      position: absolute;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      transition: width 0.8s ease;
+    }
+
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 1.5px solid var(--border-hover);
+      padding: 0.7rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .resume-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    /* =========================================================
+       CONTACT
+    ========================================================= */
+    .contact-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: clamp(1rem, 2vw, 2rem) clamp(1.5rem, 5vw, 4rem) 3rem;
+      text-align: center;
+    }
+
+    .contact-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .contact-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      margin: 0;
+    }
+
+    .contact-title em { font-style: normal; font-weight: 800; color: var(--text); }
+
+    .contact-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 1.5px solid var(--border-hover);
+      padding: 0.7rem 1.4rem;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .contact-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 0;
+      text-align: left;
+    }
+
+    .contact-link {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1.25rem 2rem;
+      flex: 1;
+    }
+
+    .contact-link:first-child { padding-left: 0; }
+    .contact-link:last-child  { padding-right: 0; }
+
+    .contact-link-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .contact-link a {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      transform: translateY(12px);
-      transition: transform 0.4s ease;
+      font-size: 12px;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 2px;
+      white-space: nowrap;
+      transition: border-color 0.2s;
     }
 
-    .project-card:hover .project-card-title,
-    .project-card:hover .project-card-meta,
-    .project-card:hover .project-card-cta {
-      transform: translateY(0);
-    }
+    .contact-link a:hover { border-color: var(--text); }
 
-    /* accent line on hover */
-    .project-card-overlay::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 0; height: 2px;
-      background: var(--accent);
-      transition: width 0.4s ease;
+    .contact-icon {
+      margin-right: 6px;
+      opacity: 0.6;
+      flex-shrink: 0;
+      vertical-align: middle;
     }
-    .project-card:hover .project-card-overlay::before { width: 100%; }
 
     /* =========================================================
        FOOTER
     ========================================================= */
     footer {
-      display: flex; justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
       padding: 1.5rem 3rem;
       border-top: 0.5px solid var(--border);
-      font-size: 13px; color: var(--muted); letter-spacing: 0.1em;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
     }
 
     /* =========================================================
        RESPONSIVE
     ========================================================= */
-    @media (max-width: 900px) {
-      .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-      .page-header { padding: 7rem 5% 2rem; }
+    @media (max-width: 1024px) {
+      .hero              { grid-template-columns: 1fr; height: auto; min-height: 100svh; }
+      .hero-content      { padding: 7rem 8% 2rem 8%; }
+      .hero-right        { height: 60vw; justify-content: center; }
+      .hero-cutout       { width: 70%; object-position: bottom center; }
+      .about-grid        { grid-template-columns: 1fr; gap: 3rem; }
+      .section           { padding: 4rem 5%; }
+      .contact-section   { padding: 4rem 5%; }
+      footer             { padding: 1.5rem 5%; flex-direction: column; gap: 0.5rem; }
     }
 
-    @media (max-width: 600px) {
-      .portfolio-grid { grid-template-columns: 1fr; gap: 2px; }
-      .page-header { padding: 6rem 1.5rem 1.5rem; }
-      footer { padding: 1.25rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+    @media (max-width: 700px) {
+      nav                { padding: 0.75rem 1.5rem 0.75rem 0.75rem; }
+      .hero              { grid-template-columns: 1fr; height: auto; min-height: unset; }
+      .hero-content      { padding: 8rem 1.5rem 1.5rem; align-items: center; text-align: center; box-sizing: border-box; width: 100%; }
+      .hero-title        { font-size: clamp(28px, 7.5vw, 40px); letter-spacing: -1px; width: 100%; margin-bottom: 0.75rem; }
+      .hero-sub          { width: 100%; text-align: justify; }
+      .hero-right        { height: 70vw; justify-content: center; align-items: flex-end; overflow: hidden; }
+      .hero-cutout       { width: 105%; height: 105%; object-fit: cover; object-position: top center; margin-bottom: 0; }
+      .section           { padding: 3.5rem 1.5rem; }
+      .about-grid        { grid-template-columns: 1fr; gap: 2.5rem; padding: 2rem 1.5rem; }
+      .about-text        { font-size: 16px; }
+      .contact-section   { padding: 1.5rem 2.5rem 2rem; text-align: left; max-width: 100%; }
+      .contact-header    { flex-direction: column; align-items: flex-start; }
+      .contact-title     { font-size: clamp(28px, 7.5vw, 42px); letter-spacing: -1px; }
+      .contact-cta       { width: 100%; justify-content: center; font-size: 10px; padding: 0.55rem 1rem; }
+      .contact-links     { flex-direction: column; border-top: none; }
+      .contact-link      { padding: 1rem 0; border-right: none; border-bottom: 0.5px solid var(--border); }
+      .contact-link:first-child { padding-left: 0; }
+      .contact-link:last-child  { border-bottom: none; padding-right: 0; }
+      .reel-section      { padding: 6rem 1.5rem 4rem; }
+      .carousel-section  { padding: 0.63rem 0 0.78rem; }
+      footer             { padding: 1.25rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-drawer { padding: 3rem 2rem; width: clamp(220px, 60vw, 280px); }
+      .hero-title { letter-spacing: -1px; }
     }
 
     /* =========================================================
-       CURSOR
+       CUSTOM CURSOR
     ========================================================= */
     @media (pointer: fine) {
       * { cursor: none; }
+
       .cursor {
-        position: fixed; top: 0; left: 0;
-        width: 16px; height: 16px; border-radius: 50%;
-        background: var(--text); pointer-events: none; z-index: 9999;
+        position: fixed;
+        top: 0; left: 0;
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        background: var(--text);
+        pointer-events: none;
+        z-index: 9999;
         transition: width 0.2s ease, height 0.2s ease, background 0.35s ease;
       }
-      .cursor.is-hovering { width: 36px; height: 36px; }
+
+      .cursor.is-hovering {
+        width: 36px;
+        height: 36px;
+      }
     }
 
   </style>
@@ -316,102 +772,196 @@
   <div class="nav-drawer" id="navDrawer">
     <ul class="nav-drawer-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="portfolio.html" class="active">Portfolio</a></li>
-      <li><a href="index.html#reel">Reel</a></li>
-      <li><a href="index.html#skills">Skills</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="#reel">Reel</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
     <p class="nav-drawer-copyright">© Inti Manassero 2026</p>
   </div>
 
-  <nav>
-    <div class="nav-right">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <nav>
+      <div></div>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="hero-content">
+      <h1 class="hero-title">About <em>me</em></h1>
+      <p class="hero-sub">
+        After studying civil engineering for four years, I discovered my true passion in the 3D world. In 2020, I started on a new path as a 3D artist, and it has been an incredibly rewarding journey ever since.
+      </p>
+      <a href="#reel" class="hero-cta" id="discoverBtn">Discover my work →</a>
     </div>
-  </nav>
+    <div class="hero-right">
+      <img src="images/hero.png" alt="Inti Manassero" class="hero-cutout"/>
+    </div>
+  </section>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <h1 class="page-title">Portfolio</h1>
-    <p class="page-subtitle">
-      <a href="https://www.artstation.com/intipazo" target="_blank">Follow my work on ArtStation →</a>
-    </p>
-  </div>
-
-  <!-- GRID -->
-  <div class="portfolio-grid">
-
-    <a href="https://www.artstation.com/artwork/LR1o6K" target="_blank" class="project-card">
-      <video autoplay muted loop playsinline>
-        <source src="images/video1.mp4" type="video/mp4"/>
-      </video>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Character Study</p>
-        <p class="project-card-meta">3D Modeling · Character</p>
-        <span class="project-card-cta">Open project →</span>
+  <!-- DEMO REEL -->
+  <section class="reel-section" id="reel">
+    <h2 class="reel-title"><span>Demo Reel</span></h2>
+    <div class="reel-container">
+      <div class="reel-wrapper">
+        <iframe
+          src="https://player.vimeo.com/video/1187089588?autoplay=0&loop=1&title=0&byline=0&portrait=0&color=f0ede6"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen>
+        </iframe>
       </div>
-    </a>
+    </div>
+  </section>
 
-    <a href="https://www.artstation.com/artwork/ZakzEG" target="_blank" class="project-card">
-      <video autoplay muted loop playsinline>
-        <source src="images/video2.mp4" type="video/mp4"/>
-      </video>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Environment</p>
-        <p class="project-card-meta">3D Modeling · Environment</p>
-        <span class="project-card-cta">Open project →</span>
+  <!-- CAROUSEL -->
+  <section class="carousel-section">
+    <div class="carousel-header">
+      <h2 class="carousel-title">Personal <em>Projects</em></h2>
+      <p class="carousel-hint">↓ &nbsp; tap the center card to open the project &nbsp; ↓</p>
+    </div>
+    <div class="carousel-cf">
+      <div class="carousel-cf-track" id="cfTrack">
+        <a href="https://www.artstation.com/artwork/LR1o6K" target="_blank" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/video1.mp4" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="https://www.artstation.com/artwork/ZakzEG" target="_blank" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/video2.mp4" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="https://www.artstation.com/artwork/yD2O05" target="_blank" class="carousel-cf-item top-crop">
+          <img src="images/render1.jpg" alt="Render 1"/>
+        </a>
+        <a href="https://www.artstation.com/artwork/Dvwkqn" target="_blank" class="carousel-cf-item bottom-crop">
+          <video autoplay muted loop playsinline>
+            <source src="images/video3.mp4" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="https://www.artstation.com/artwork/ZaRPqR" target="_blank" class="carousel-cf-item">
+          <img src="images/render2.jpg" alt="Render 2"/>
+        </a>
+        <a href="https://www.artstation.com/artwork/LR4mN0" target="_blank" class="carousel-cf-item">
+          <img src="images/render3.jpg" alt="Render 3"/>
+        </a>
       </div>
-    </a>
+    </div>
+  </section>
 
-    <a href="https://www.artstation.com/artwork/yD2O05" target="_blank" class="project-card top-crop">
-      <img src="images/render1.jpg" alt="Render 1"/>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Creature Sculpt</p>
-        <p class="project-card-meta">ZBrush · Character</p>
-        <span class="project-card-cta">Open project →</span>
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="about-grid">
+      <div>
+        <h2 class="about-title">Professional <em>Skills</em></h2>
+        <p class="about-text">
+          3D Artist more focused in character and modelling, always aimed at elevating the visual and narrative quality of each project.
+        </p>
+        <p class="about-text">
+          Committed to continuous growth and seeking challenges that allow me to expand my vision as a professional in the animation and video game industry.
+        </p>
       </div>
-    </a>
-
-    <a href="https://www.artstation.com/artwork/Dvwkqn" target="_blank" class="project-card bottom-crop">
-      <video autoplay muted loop playsinline>
-        <source src="images/video3.mp4" type="video/mp4"/>
-      </video>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Animation</p>
-        <p class="project-card-meta">Blender · Animation</p>
-        <span class="project-card-cta">Open project →</span>
+      <div>
+        <p class="skills-label">Software Pipeline</p>
+        <div class="skills-list">
+          <div class="skill-item"><span class="skill-name">ZBrush</span></div>
+          <div class="skill-item"><span class="skill-name">Blender</span></div>
+          <div class="skill-item"><span class="skill-name">Substance 3D Painter</span></div>
+          <div class="skill-item"><span class="skill-name">Photoshop</span></div>
+        </div>
+        <a href="#" target="_blank" class="resume-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Download Resume</span>
+        </a>
       </div>
-    </a>
+    </div>
+  </section>
 
-    <a href="https://www.artstation.com/artwork/ZaRPqR" target="_blank" class="project-card">
-      <img src="images/render2.jpg" alt="Render 2"/>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Props & Texturing</p>
-        <p class="project-card-meta">Substance · Texturing</p>
-        <span class="project-card-cta">Open project →</span>
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-header">
+      <h2 class="contact-title">Let's create <em>together</em></h2>
+      <a href="mailto:intimanassero@gmail.com" class="contact-cta">
+        <span>Get in touch →</span>
+      </a>
+    </div>
+    <div class="contact-links">
+      <div class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <a href="mailto:intimanassero@gmail.com">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          intimanassero@gmail.com
+        </a>
       </div>
-    </a>
-
-    <a href="https://www.artstation.com/artwork/LR4mN0" target="_blank" class="project-card">
-      <img src="images/render3.jpg" alt="Render 3"/>
-      <div class="project-card-overlay">
-        <p class="project-card-title">Render Study</p>
-        <p class="project-card-meta">Blender · Lookdev</p>
-        <span class="project-card-cta">Open project →</span>
+      <div class="contact-link">
+        <span class="contact-link-label">ArtStation</span>
+        <a href="https://www.artstation.com/intipazo" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg>
+          artstation.com/intipazo
+        </a>
       </div>
-    </a>
-
-  </div>
+      <div class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/inti-manassero-77197314a/" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          linkedin/inti-manassero
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">Instagram</span>
+        <a href="https://www.instagram.com/intipazo/" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          @intipazo
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">BlenderArtists</span>
+        <a href="https://blenderartists.org/u/intipazo/activity/portfolio" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon" style="opacity:0.6"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.06L2 22l4.94-1.38A9.953 9.953 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1.5 13H8V9h2.5v6zm3.5 0h-2V9h2v6z"/></svg>
+          blenderartists/intipazo
+        </a>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <span>© Inti Manassero 2026</span>
-    <span><a href="index.html" style="color:var(--muted); border-bottom: 0.5px solid var(--border);">← Back to home</a></span>
   </footer>
 
   <script>
+    // HERO BG — try to load herobg.jpg; CSS gradient is the fallback
+    (function() {
+      const heroBgEl = document.querySelector('.hero-bg');
+      if (!heroBgEl) return;
+      const img = new Image();
+      img.onload = () => heroBgEl.classList.add('has-image');
+      img.src = 'images/herobg.jpg';
+    })();
+
+    // DISCOVER BTN — scroll so the video is centered in viewport
+    const discoverBtn = document.getElementById('discoverBtn');
+    if (discoverBtn) {
+      discoverBtn.addEventListener('click', e => {
+        e.preventDefault();
+        const wrapper = document.querySelector('.reel-wrapper');
+        if (!wrapper) return;
+        const rect    = wrapper.getBoundingClientRect();
+        const wrapH   = rect.height;
+        const targetY = window.scrollY + rect.top - (window.innerHeight / 2) + (wrapH / 2);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      });
+    }
+
     // THEME
     const html        = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
@@ -426,15 +976,126 @@
     const hamburger  = document.getElementById('hamburger');
     const navDrawer  = document.getElementById('navDrawer');
     const navOverlay = document.getElementById('navOverlay');
+
     function setMenuOpen(open) {
       hamburger.classList.toggle('open', open);
       navDrawer.classList.toggle('open', open);
       navOverlay.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
+      // reset to main panel when closing
+      if (!open) navDrawer.classList.remove('portfolio-open');
     }
-    hamburger.addEventListener('click',  () => setMenuOpen(!navDrawer.classList.contains('open')));
+
+    hamburger.addEventListener('click', () => setMenuOpen(!navDrawer.classList.contains('open')));
     navOverlay.addEventListener('click', () => setMenuOpen(false));
-    navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenuOpen(false)));
+
+    // close on regular link clicks
+    navDrawer.querySelectorAll('a[href]').forEach(a => {
+      if (!a.closest('.nav-portfolio-grid') && !a.style.color) {
+        a.addEventListener('click', () => setMenuOpen(false));
+      }
+    });
+    navDrawer.querySelectorAll('.nav-panel a[href]:not([target="_blank"])').forEach(a => {
+      a.addEventListener('click', () => setMenuOpen(false));
+    });
+
+    // portfolio panel toggle
+    const portfolioBtn  = document.getElementById('portfolioBtn');
+    const portfolioBack = document.getElementById('portfolioBack');
+    if (portfolioBtn)  portfolioBtn.addEventListener('click',  () => navDrawer.classList.add('portfolio-open'));
+    if (portfolioBack) portfolioBack.addEventListener('click', () => navDrawer.classList.remove('portfolio-open'));
+
+    // HERO FADE
+    const heroSection = document.getElementById('hero');
+    window.addEventListener('scroll', () => {
+      const progress = Math.min(window.scrollY / (heroSection.offsetHeight * 0.35), 1);
+      heroSection.style.setProperty('--grad-opacity', progress);
+    }, { passive: true });
+
+    // CAROUSEL
+    (function initCarousel() {
+      const track = document.getElementById('cfTrack');
+      if (!track) return;
+
+      const items = Array.from(track.querySelectorAll('.carousel-cf-item'));
+      const total = items.length;
+      const SPEED = 0.00022;
+      let offset  = 0;
+      let gap     = 0;
+
+      function updateGap() {
+        const first = items[0];
+        if (!first) { gap = window.innerWidth * 0.2; return; }
+        const w = first.getBoundingClientRect().width;
+        gap = window.innerWidth < 700 ? w * 1.35 : w * 1.1;
+      }
+
+      function render() {
+        items.forEach((item, i) => {
+          const raw = i - offset;
+          const pos = ((raw % total) + total + total / 2) % total - total / 2;
+
+          const tx      = pos * gap;
+          const ty      = pos * pos * 18;
+          const tz      = -Math.abs(pos) * 180;
+          const rotateY = Math.max(-65, Math.min(65, pos * -38));
+          const scale   = Math.max(0.6, 1 - Math.abs(pos) * 0.08);
+          const opacity = Math.abs(pos) > 4 ? 0 : Math.max(0, 1 - Math.abs(pos) * 0.25);
+
+          item.style.transform  = `translate(-50%, -50%) translateX(${tx}px) translateY(${ty}px) translateZ(${tz}px) rotateY(${rotateY}deg) scale(${scale})`;
+          item.style.opacity    = opacity;
+          item.style.zIndex     = Math.round(scale * 100);
+          item.style.transition = 'none';
+        });
+      }
+
+      function loop(ts) {
+        if (!loop.last) loop.last = ts;
+        offset    += SPEED * (ts - loop.last);
+        loop.last  = ts;
+        render();
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', updateGap, { passive: true });
+      window.addEventListener('load',   updateGap);
+
+      updateGap();
+      render();
+      requestAnimationFrame(loop);
+
+      items.forEach((item, i) => {
+        item.addEventListener('click', e => {
+          const raw = i - offset;
+          const pos = ((raw % total) + total + total / 2) % total - total / 2;
+          if (Math.abs(pos) > 0.5) e.preventDefault();
+          // center card opens its href in new tab — already has target="_blank"
+        });
+      });
+    })();
+
+    // SKILLS — animated bars triggered on scroll
+    const skillFills = document.querySelectorAll('.skill-fill');
+
+    function animateSkillBars() {
+      skillFills.forEach(el => { el.style.width = el.dataset.w + '%'; });
+      setTimeout(() => {
+        skillFills.forEach(el => { el.style.width = '0%'; });
+        setTimeout(animateSkillBars, 1000);
+      }, 3000);
+    }
+
+    const skillsObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateSkillBars();
+          skillsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const skillsList = document.querySelector('.skills-list');
+    if (skillsList) skillsObserver.observe(skillsList);
 
     // CURSOR
     (function initCursor() {
