@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tomás Aldazabal — 3D Artist & Technical Animator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+  <style>
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    a         { -webkit-tap-highlight-color: transparent; }
+    a:visited { color: inherit; }
+    a:focus   { outline: none; }
+
+    /* =========================================================
+       TOKENS — Design variables
+    ========================================================= */
+    :root {
+      --bg:           #0d0d0d;
+      --bg2:          #141414;
+      --bg3:          #1c1c1c;
+      --text:         #f0ede6;
+      --muted:        #666560;
+      --accent:       #CCFF00;
+      --border:       rgba(240, 237, 230, 0.08);
+      --border-hover: rgba(240, 237, 230, 0.22);
+      --toggle-bg:    #1c1c1c;
+      --toggle-knob:  #f0ede6;
+      --text-dim:     #d0cdc6;
+    }
+
+    [data-theme="light"] {
+      --bg:           #f5f3ee;
+      --bg2:          #eceae4;
+      --bg3:          #e3e0d9;
+      --text:         #0d0d0d;
+      --muted:        #999890;
+      --border:       rgba(13, 13, 13, 0.1);
+      --border-hover: rgba(13, 13, 13, 0.28);
+      --toggle-bg:    #e3e0d9;
+      --toggle-knob:  #0d0d0d;
+    }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    /* =========================================================
+       NOISE OVERLAY
+    ========================================================= */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 250px 250px;
+      background-repeat: repeat;
+      mix-blend-mode: soft-light;
+      opacity: 0.85;
+      animation: noise-move 0.4s steps(1) infinite;
+    }
+
+    @keyframes noise-move {
+      0%   { background-position:   0px   0px; }
+      25%  { background-position: -30px  15px; }
+      50%  { background-position:  15px -20px; }
+      75%  { background-position: -15px  25px; }
+      100% { background-position:  20px -10px; }
+    }
+
+    /* =========================================================
+       NAV
+    ========================================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2rem 0.75rem 0.5rem;
+      background: transparent;
+    }
+
+    .nav-logo {
+      position: relative;
+      display: block;
+      height: 99px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      position: absolute;
+      top: 0; left: 0;
+      height: 99px;
+      width: auto;
+      display: block;
+      transition: opacity 0.5s ease;
+    }
+
+    .logo-dark  { opacity: 0; }
+    .logo-light { opacity: 1; }
+
+    html[data-theme="dark"]  .logo-dark  { opacity: 1; }
+    html[data-theme="dark"]  .logo-light { opacity: 0; }
+    html[data-theme="light"] .logo-dark  { opacity: 0; }
+    html[data-theme="light"] .logo-light { opacity: 1; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      background: var(--toggle-bg);
+      border: 0.5px solid var(--border-hover);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--toggle-knob);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    [data-theme="light"] .theme-toggle::after { transform: translateX(18px); }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 0.55rem 0.65rem;
+      background: #0d0d0d;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      z-index: 1100;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: #f0ede6;
+      transform-origin: center;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* =========================================================
+       NAV DRAWER
+    ========================================================= */
+    .nav-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: clamp(260px, 80vw, 340px);
+      height: 100vh;
+      z-index: 1050;
+      background: var(--bg);
+      border-left: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 4rem 3rem;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .nav-drawer.open { transform: translateX(0); }
+
+    .nav-drawer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 3rem;
+    }
+
+    .nav-drawer-links li            { border-top: 0.5px solid var(--border-hover); }
+    .nav-drawer-links li:last-child { border-bottom: 0.5px solid var(--border-hover); }
+
+    .nav-drawer-links a {
+      display: block;
+      padding: 1.2rem 0;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-drawer-links a:hover { color: var(--accent); }
+
+    .nav-drawer-copyright {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2rem;
+    }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1040;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero {
+      height: 60vh;
+      min-height: 400px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/herobg.png');
+      background-size: cover;
+      background-position: 80% center;
+      z-index: 0;
+    }
+
+    #hero { --grad-opacity: 0; }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: clamp(150px, 25vh, 320px);
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      z-index: 3;
+      pointer-events: none;
+      opacity: var(--grad-opacity);
+      transition: opacity 0.1s ease;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4% 4rem 47%;
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    .hero-cutout {
+      width: clamp(240px, 100%, 720px);
+      height: 135%;
+      object-fit: contain;
+      object-position: bottom left;
+      display: block;
+      margin-bottom: -15%;
+    }
+
+    .hero-title {
+      font-size: clamp(25px, 4.36vw, 60px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      color: #1a1a18;
+    }
+
+    .hero-title em { font-style: italic; font-weight: 400; opacity: 0.45; }
+
+    .hero-sub {
+      font-size: clamp(13px, 1.33vw, 19px);
+      color: rgba(13, 13, 13, 0.65);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+      max-width: 90%;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: fit-content;
+      font-size: clamp(10px, 0.88vw, 12px);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #f0ede6;
+      text-decoration: none;
+      background: #1a1a18;
+      border: 1.5px solid #1a1a18;
+      padding: 0.825rem 1.65rem;
+      border-radius: 2px;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    [data-theme="light"] .hero-cta {
+      color: #f0ede6;
+      background: #1a1a18;
+      border-color: #1a1a18;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    /* =========================================================
+       DEMO REEL
+    ========================================================= */
+    .reel-section {
+      padding: 9rem 3rem 6rem;
+      position: relative;
+      z-index: 5;
+    }
+
+    .reel-title {
+      text-align: center;
+      font-size: clamp(28px, 4.84vw, 67px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 3rem;
+    }
+
+    .reel-container { max-width: 960px; margin: 0 auto; }
+
+    .reel-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: var(--bg3);
+    }
+
+    .reel-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* =========================================================
+       CAROUSEL — coverflow
+    ========================================================= */
+    .carousel-section {
+      padding: 1.8rem 0 2.24rem;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+    }
+
+    .carousel-cf {
+      width: 100%;
+      height: clamp(260px, 45vw, 600px);
+      position: relative;
+      overflow: hidden;
+      perspective: clamp(800px, 120vw, 2000px);
+    }
+
+    .carousel-cf-track {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      transform-style: preserve-3d;
+      width: 0; height: 0;
+    }
+
+    .carousel-cf-item {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(240px, 32vw, 520px);
+      height: clamp(150px, 20vw, 325px);
+      border-radius: 18px;
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      will-change: transform, opacity;
+      cursor: pointer;
+    }
+
+    .carousel-cf-item img,
+    .carousel-cf-item video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       SECTIONS — shared layout
+    ========================================================= */
+    .section { padding: clamp(3rem, 5vw, 6rem) 0; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0 0 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 16px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* =========================================================
+       ABOUT
+    ========================================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 5rem;
+    }
+
+    .about-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 2rem;
+    }
+
+    .about-title em { font-style: italic; font-weight: 400; color: var(--muted); }
+
+    .about-text {
+      font-size: 19px;
+      line-height: 2;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      text-align: justify;
+    }
+
+    .edu-label {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .edu-title { font-size: 19px; color: var(--text); margin-bottom: 0.25rem; }
+    .edu-inst  { font-size: 17px; color: var(--muted); margin-bottom: 1.25rem; }
+
+    /* =========================================================
+       SKILLS
+    ========================================================= */
+    .skills-label {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .skills-list { display: flex; flex-direction: column; }
+
+    .skill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 18px;
+    }
+
+    .skill-name { color: var(--muted); }
+    [data-theme="dark"] .skill-name { color: var(--text-dim, #d0cdc6); }
+
+    .skill-bar {
+      width: 80px; height: 2px;
+      background: var(--border-hover);
+      position: relative;
+    }
+
+    .skill-fill {
+      position: absolute;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      transition: width 0.8s ease;
+    }
+
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 1.5px solid var(--border-hover);
+      padding: 0.7rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .resume-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    /* =========================================================
+       EXPERIENCE
+    ========================================================= */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 5rem;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 2rem;
+      align-items: baseline;
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .exp-company { font-size: 22px; font-weight: 700; }
+    .exp-role    { font-size: 16px; color: var(--muted); margin-top: 4px; }
+    .exp-desc    { font-size: 18px; color: var(--muted); }
+    .exp-period  { font-family: 'Syne Mono', monospace; font-size: 16px; color: var(--muted); white-space: nowrap; }
+
+    /* =========================================================
+       CONTACT
+    ========================================================= */
+    .contact-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: clamp(1rem, 2vw, 2rem) clamp(1.5rem, 5vw, 4rem) 3rem;
+      text-align: center;
+    }
+
+    .contact-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .contact-title {
+      font-size: clamp(25px, 2.94vw, 46px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .contact-title em { font-style: italic; font-weight: 400; color: var(--muted); }
+
+    .contact-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 1.5px solid var(--border-hover);
+      padding: 0.7rem 1.4rem;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .contact-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1a18;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 0;
+      text-align: left;
+    }
+
+    .contact-link {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1.25rem 2rem;
+      flex: 1;
+    }
+
+    .contact-link:first-child { padding-left: 0; }
+    .contact-link:last-child  { padding-right: 0; }
+
+    .contact-link-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .contact-link a {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 2px;
+      white-space: nowrap;
+      transition: border-color 0.2s;
+    }
+
+    .contact-link a:hover { border-color: var(--text); }
+
+    /* Contact link icons */
+    .contact-icon {
+      margin-right: 6px;
+      opacity: 0.6;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      border-top: 0.5px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 1024px) {
+      .hero              { grid-template-columns: 1fr; height: auto; min-height: 100svh; }
+      .hero-content      { padding: 7rem 8% 2rem 8%; }
+      .hero-right        { height: 60vw; justify-content: center; }
+      .hero-cutout       { width: 70%; object-position: bottom center; }
+      .about-grid        { grid-template-columns: 1fr; gap: 3rem; }
+      .exp-item          { grid-template-columns: 1fr; gap: 0.2rem; }
+      .section           { padding: 4rem 5%; }
+      .contact-section   { padding: 4rem 5%; }
+      footer             { padding: 1.5rem 5%; flex-direction: column; gap: 0.5rem; }
+    }
+
+    @media (max-width: 700px) {
+      nav                { padding: 0.75rem 1.5rem 0.75rem 0.75rem; }
+      .hero              { grid-template-columns: 1fr; height: auto; min-height: unset; }
+      .hero-content      { padding: 8rem 1.5rem 1.5rem; align-items: center; text-align: center; box-sizing: border-box; width: 100%; }
+      .hero-title        { font-size: clamp(28px, 7.5vw, 40px); letter-spacing: -1px; width: 100%; margin-bottom: 0.75rem; }
+      .hero-sub          { width: 100%; text-align: justify; }
+      .hero-right        { height: 70vw; justify-content: center; align-items: flex-end; overflow: hidden; }
+      .hero-cutout       { width: 105%; height: 105%; object-fit: cover; object-position: top center; margin-bottom: 0; }
+      .section           { padding: 3.5rem 1.5rem; }
+      .about-grid        { grid-template-columns: 1fr; gap: 2.5rem; padding: 2rem 1.5rem; }
+      .about-text        { font-size: 16px; }
+      .exp-list          { padding: 0 1.5rem; }
+      .exp-item          { grid-template-columns: 1fr; gap: 0.2rem; }
+      .exp-desc          { font-size: 15px; }
+      .contact-section   { padding: 1.5rem 2.5rem 2rem; text-align: left; max-width: 100%; }
+      .contact-header    { flex-direction: column; align-items: flex-start; }
+      .contact-title     { font-size: clamp(21px, 6.17vw, 42px); }
+      .contact-cta       { width: 100%; justify-content: center; font-size: 10px; padding: 0.55rem 1rem; }
+      .contact-links     { flex-direction: column; border-top: none; }
+      .contact-link      { padding: 1rem 0; border-right: none; border-bottom: 0.5px solid var(--border); }
+      .contact-link:first-child { padding-left: 0; }
+      .contact-link:last-child  { border-bottom: none; padding-right: 0; }
+      .reel-section      { padding: 6rem 1.5rem 4rem; }
+      .carousel-section  { padding: 0.63rem 0 0.78rem; }
+      footer             { padding: 1.25rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-drawer { padding: 3rem 2rem; width: clamp(220px, 60vw, 280px); }
+      .hero-title { letter-spacing: -1px; }
+    }
+
+    /* =========================================================
+       CUSTOM CURSOR — solo desktop (pointer: fine)
+    ========================================================= */
+    @media (pointer: fine) {
+      * { cursor: none; }
+
+      .cursor {
+        position: fixed;
+        top: 0; left: 0;
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        background: var(--text);
+        pointer-events: none;
+        z-index: 9999;
+        transition: width 0.2s ease, height 0.2s ease, background 0.35s ease;
+      }
+
+      .cursor.is-hovering {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+  <div class="nav-drawer" id="navDrawer">
+    <ul class="nav-drawer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="#reel">Reel</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <p class="nav-drawer-copyright">© TomasAldazabal 2026</p>
+  </div>
+
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <img class="logo-dark"  src="images/logo-white.png" alt="Tomás Aldazabal"/>
+        <img class="logo-light" src="images/logo-black.png" alt="Tomás Aldazabal"/>
+      </a>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+        <button class="hamburger"    id="hamburger"   aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="hero-content">
+      <h1 class="hero-title">Hello world</h1>
+      <p class="hero-sub">
+        My name is Tomás Aldazabal, but you can call me Tom. I'm a 3D Artist and Technical Animator with over 5 years of experience. I specialize in the creation of stories, characters and complex systems in 3D pipelines. Driven by passion and creativity, I bring a comprehensive vision to every challenge, always seeking to innovate in visual narrative and design with a distinctive identity.
+      </p>
+      <a href="portfolio.html" class="hero-cta">Discover my work →</a>
+    </div>
+    <div class="hero-right">
+      <img src="images/hero.png" alt="Tomás Aldazabal" class="hero-cutout"/>
+    </div>
+  </section>
+
+  <section class="reel-section" id="reel">
+    <h2 class="reel-title">
+      <span>Demo Reel</span>
+    </h2>
+    <div class="reel-container">
+      <div class="reel-wrapper">
+        <iframe
+          src="https://player.vimeo.com/video/1180996956?autoplay=0&loop=1&title=0&byline=0&portrait=0&color=f0ede6"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="carousel-section">
+    <div class="carousel-cf">
+      <div class="carousel-cf-track" id="cfTrack">
+        <a href="the-office-encounter.html" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/AF_AnimFinal_v2.mov" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="lemon.html" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/Hacker_RenderMovie_16-9.mov" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="clubbers.html" class="carousel-cf-item">
+          <img src="images/clubbers.png" alt="Clubbers"/>
+        </a>
+        <a href="paramount.html" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/PN_PINBALL_LAT.mp4" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="portfolio.html" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/braumAnim.mov" type="video/mp4"/>
+          </video>
+        </a>
+        <a href="portfolio.html" class="carousel-cf-item">
+          <video autoplay muted loop playsinline>
+            <source src="images/alan.mov" type="video/mp4"/>
+          </video>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="about-grid">
+      <div>
+        <h2 class="about-title">About <em>Me</em></h2>
+        <p class="about-text">
+          3D Artist and animator focused on the art of storytelling through form and motion. My expertise spans from high-fidelity modeling to advanced technical rigging, always aimed at elevating the visual and narrative quality of each project.
+        </p>
+        <p class="about-text">
+          Committed to continuous growth and seeking challenges that allow me to expand my vision as a professional in the animation and video game industry.
+        </p>
+        <p class="edu-label">Education</p>
+        <p class="edu-title">Tecnicatura en Animación 3D y Efectos Visuales</p>
+        <p class="edu-inst">Universidad Nacional de San Martín · 2021–<span>Present</span></p>
+        <p class="edu-title">Rigging for TD's</p>
+        <p class="edu-inst">Keyframe Animation School · 2023–2024</p>
+      </div>
+      <div>
+        <p class="skills-label">Software</p>
+        <div class="skills-list">
+          <div class="skill-item"><span class="skill-name">Autodesk Maya</span>       <div class="skill-bar"><div class="skill-fill" data-w="95"></div></div></div>
+          <div class="skill-item"><span class="skill-name">ZBrush</span>              <div class="skill-bar"><div class="skill-fill" data-w="88"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Unreal Engine</span>       <div class="skill-bar"><div class="skill-fill" data-w="82"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Blender</span>             <div class="skill-bar"><div class="skill-fill" data-w="85"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Substance 3D Painter</span><div class="skill-bar"><div class="skill-fill" data-w="62"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Marmoset Toolbag</span>   <div class="skill-bar"><div class="skill-fill" data-w="37"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Nuke / Adobe Suite</span> <div class="skill-bar"><div class="skill-fill" data-w="35"></div></div></div>
+        </div>
+        <a href="https://drive.google.com/file/d/1NtgrAzIgPSdV4DYX31Pw1Ae2LPDVJOTR/view?usp=sharing"
+           target="_blank"
+           class="resume-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Download Resume</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: clamp(1rem, 2vw, 2rem);">
+    <div class="exp-list">
+      <div class="section-header">
+        <span class="section-label">Experience</span>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-company">Beliér Arts</p>
+          <p class="exp-role">Lead 3D Artist</p>
+        </div>
+        <p class="exp-desc">Pipelines · Rigging · LookDev · <span>Character Modeling</span></p>
+        <p class="exp-period">Nov 2023–<span>Present</span></p>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-company">Lambda Class</p>
+          <p class="exp-role">3D Animator</p>
+        </div>
+        <p class="exp-desc">Champions of Mirra · Game Animation</p>
+        <p class="exp-period">Apr–Aug 2024</p>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-company">Senscape</p>
+          <p class="exp-role">3D Rigger</p>
+        </div>
+        <p class="exp-desc">Silent Hill: Ascension · Cinematic Rigging</p>
+        <p class="exp-period">Oct–Dec 2023</p>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-company">Waypoint LA</p>
+          <p class="exp-role">3D Technical Animator</p>
+        </div>
+        <p class="exp-desc">Bandai Namco · Ubisoft · Technical Rigs</p>
+        <p class="exp-period">Jul 2022–Oct 2023</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact">
+    <div class="contact-header">
+      <h2 class="contact-title">Let's create <em>together</em></h2>
+      <a href="https://calendly.com/tomalda3d/30min" target="_blank" class="contact-cta">
+        <span>Schedule a meeting →</span>
+      </a>
+    </div>
+    <div class="contact-links">
+      <div class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <a href="mailto:tomalda3d@gmail.com">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          tomalda3d@gmail.com
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">ArtStation</span>
+        <a href="https://artstation.com/tomalda3d" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"/></svg>
+          artstation.com/tomalda3d
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">Instagram</span>
+        <a href="https://instagram.com/tomalda3d" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          @tomalda3d
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/tomas-aldazabal/" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          linkedin/tomalda3d
+        </a>
+      </div>
+      <div class="contact-link">
+        <span class="contact-link-label">Linktree</span>
+        <a href="https://linktr.ee/tomalda3d" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          linktr.ee/tomalda3d
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© Tomás Aldazabal 2026</span>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script>
+
+    // =========================================================
+    // THEME
+    // =========================================================
+    const html        = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+
+    html.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // =========================================================
+    // NAV DRAWER
+    // =========================================================
+    const hamburger  = document.getElementById('hamburger');
+    const navDrawer  = document.getElementById('navDrawer');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function setMenuOpen(open) {
+      hamburger.classList.toggle('open', open);
+      navDrawer.classList.toggle('open', open);
+      navOverlay.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click',  () => setMenuOpen(!navDrawer.classList.contains('open')));
+    navOverlay.addEventListener('click', () => setMenuOpen(false));
+    navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenuOpen(false)));
+
+    // =========================================================
+    // HERO — gradient fade on scroll
+    // =========================================================
+    const heroSection = document.getElementById('hero');
+
+    window.addEventListener('scroll', () => {
+      const progress = Math.min(window.scrollY / (heroSection.offsetHeight * 0.35), 1);
+      heroSection.style.setProperty('--grad-opacity', progress);
+    }, { passive: true });
+
+    // =========================================================
+    // CAROUSEL — coverflow with parabolic arc
+    // =========================================================
+    (function initCarousel() {
+      const track = document.getElementById('cfTrack');
+      if (!track) return;
+
+      const items = Array.from(track.querySelectorAll('.carousel-cf-item'));
+      const total = items.length;
+      const SPEED = 0.00022;
+      let offset  = 0;
+      let gap     = 0;
+
+      // Read actual rendered width from CSS — single source of truth
+      function updateGap() {
+        const first = items[0];
+        if (!first) { gap = window.innerWidth * 0.2; return; }
+        const w = first.getBoundingClientRect().width;
+        gap = window.innerWidth < 700 ? w * 1.35 : w * 1.1;
+      }
+
+      function render() {
+        items.forEach((item, i) => {
+          const raw = i - offset;
+          const pos = ((raw % total) + total + total / 2) % total - total / 2;
+
+          const tx      = pos * gap;
+          const ty      = pos * pos * 18;                         // parabolic arc
+          const tz      = -Math.abs(pos) * 180;
+          const rotateY = Math.max(-65, Math.min(65, pos * -38));
+          const scale   = Math.max(0.6, 1 - Math.abs(pos) * 0.08);
+          const opacity = Math.abs(pos) > 4 ? 0 : Math.max(0, 1 - Math.abs(pos) * 0.25);
+
+          item.style.transform  = `translate(-50%, -50%) translateX(${tx}px) translateY(${ty}px) translateZ(${tz}px) rotateY(${rotateY}deg) scale(${scale})`;
+          item.style.opacity    = opacity;
+          item.style.zIndex     = Math.round(scale * 100);
+          item.style.transition = 'none';
+        });
+      }
+
+      function loop(ts) {
+        if (!loop.last) loop.last = ts;
+        offset    += SPEED * (ts - loop.last);
+        loop.last  = ts;
+        render();
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', updateGap, { passive: true });
+      window.addEventListener('load',   updateGap);
+
+      updateGap();
+      render();
+      requestAnimationFrame(loop);
+
+      // Prevent navigation on non-centered cards
+      items.forEach((item, i) => {
+        item.addEventListener('click', e => {
+          const raw = i - offset;
+          const pos = ((raw % total) + total + total / 2) % total - total / 2;
+          if (Math.abs(pos) > 0.5) e.preventDefault();
+        });
+      });
+    })();
+
+    // =========================================================
+    // SKILLS — animated bars triggered on scroll into view
+    // =========================================================
+    const skillFills = document.querySelectorAll('.skill-fill');
+
+    function animateSkillBars() {
+      skillFills.forEach(el => { el.style.width = el.dataset.w + '%'; });
+      setTimeout(() => {
+        skillFills.forEach(el => { el.style.width = '0%'; });
+        setTimeout(animateSkillBars, 1000);
+      }, 3000);
+    }
+
+    const skillsObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateSkillBars();
+          skillsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const skillsList = document.querySelector('.skills-list');
+    if (skillsList) skillsObserver.observe(skillsList);
+
+    // =========================================================
+    // CUSTOM CURSOR — solo desktop
+    // =========================================================
+    (function initCursor() {
+      // Solo activar en dispositivos con puntero fino (mouse)
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+
+      const cursor = document.getElementById('cursor');
+      if (!cursor) return;
+
+      // Seguir el mouse sin delay, usando transform para no afectar layout
+      document.addEventListener('mousemove', e => {
+        cursor.style.transform = `translate(${e.clientX - 8}px, ${e.clientY - 8}px)`;
+      }, { passive: true });
+
+      // Crecer al pasar sobre elementos interactivos
+      document.addEventListener('mouseover', e => {
+        if (e.target.closest('a, button, [role="button"]')) {
+          cursor.classList.add('is-hovering');
+        } else {
+          cursor.classList.remove('is-hovering');
+        }
+      }, { passive: true });
+    })();
+
+  </script>
+</body>
+</html>
