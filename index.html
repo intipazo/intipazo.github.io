@@ -45,6 +45,7 @@
       --bg3:          #e3e0d9;
       --text:         #0d0d0d;
       --muted:        #999890;
+      --text-dim:     #3a3935;
       --border:       rgba(13, 13, 13, 0.1);
       --border-hover: rgba(13, 13, 13, 0.28);
       --toggle-bg:    #e3e0d9;
@@ -350,10 +351,10 @@
        DEMO REEL
     ========================================================= */
     .reel-section {
-      padding: 9rem 3rem 6rem;
+      padding: 4rem 3rem 6rem;
       position: relative;
       z-index: 5;
-      scroll-margin-top: 20vh;
+      scroll-margin-top: 0;
     }
 
     .reel-title {
@@ -508,7 +509,7 @@
     .about-text {
       font-size: 19px;
       line-height: 2;
-      color: var(--muted);
+      color: var(--text-dim);
       margin-bottom: 1.5rem;
       text-align: justify;
     }
@@ -790,7 +791,7 @@
       <p class="hero-sub">
         After studying civil engineering for four years, I discovered my true passion in the 3D world. In 2020, I started on a new path as a 3D artist, and it has been an incredibly rewarding journey ever since.
       </p>
-      <a href="#reel" class="hero-cta">Discover my work →</a>
+      <a href="#reel" class="hero-cta" id="discoverBtn">Discover my work →</a>
     </div>
     <div class="hero-right">
       <img src="images/hero.png" alt="Inti Manassero" class="hero-cutout"/>
@@ -940,6 +941,20 @@
       img.onload = () => heroBgEl.classList.add('has-image');
       img.src = 'images/herobg.jpg';
     })();
+
+    // DISCOVER BTN — scroll so the video is centered in viewport
+    const discoverBtn = document.getElementById('discoverBtn');
+    if (discoverBtn) {
+      discoverBtn.addEventListener('click', e => {
+        e.preventDefault();
+        const wrapper = document.querySelector('.reel-wrapper');
+        if (!wrapper) return;
+        const rect    = wrapper.getBoundingClientRect();
+        const wrapH   = rect.height;
+        const targetY = window.scrollY + rect.top - (window.innerHeight / 2) + (wrapH / 2);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      });
+    }
 
     // THEME
     const html        = document.documentElement;
