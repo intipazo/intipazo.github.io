@@ -98,30 +98,6 @@
       background: transparent;
     }
 
-    .nav-logo {
-      position: relative;
-      display: block;
-      height: 99px;
-      text-decoration: none;
-    }
-
-    .nav-logo img {
-      position: absolute;
-      top: 0; left: 0;
-      height: 99px;
-      width: auto;
-      display: block;
-      transition: opacity 0.5s ease;
-    }
-
-    .logo-dark  { opacity: 0; }
-    .logo-light { opacity: 1; }
-
-    html[data-theme="dark"]  .logo-dark  { opacity: 1; }
-    html[data-theme="dark"]  .logo-light { opacity: 0; }
-    html[data-theme="light"] .logo-dark  { opacity: 0; }
-    html[data-theme="light"] .logo-light { opacity: 1; }
-
     .nav-right {
       display: flex;
       align-items: center;
@@ -377,14 +353,15 @@
       padding: 9rem 3rem 6rem;
       position: relative;
       z-index: 5;
+      scroll-margin-top: 20vh;
     }
 
     .reel-title {
       text-align: center;
-      font-size: clamp(28px, 4.84vw, 67px);
+      font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
-      letter-spacing: -2px;
-      line-height: 1;
+      letter-spacing: -1px;
+      line-height: 1.05;
       color: var(--text);
       margin-bottom: 3rem;
     }
@@ -413,6 +390,29 @@
       overflow: hidden;
       position: relative;
       z-index: 5;
+    }
+
+    .carousel-header {
+      text-align: center;
+      padding: 0 0 1.5rem;
+    }
+
+    .carousel-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .carousel-title em { font-style: italic; font-weight: 400; color: var(--muted); }
+
+    .carousel-hint {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     .carousel-cf {
@@ -451,8 +451,14 @@
     .carousel-cf-item video {
       width: 100%; height: 100%;
       object-fit: cover;
+      object-position: center;
       display: block;
       pointer-events: none;
+    }
+
+    .carousel-cf-item.top-crop img,
+    .carousel-cf-item.top-crop video {
+      object-position: top;
     }
 
     /* =========================================================
@@ -590,10 +596,10 @@
     }
 
     .contact-title {
-      font-size: clamp(25px, 2.94vw, 46px);
+      font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
-      letter-spacing: -2px;
-      line-height: 1;
+      letter-spacing: -1px;
+      line-height: 1.05;
       margin: 0;
     }
 
@@ -711,7 +717,7 @@
       .about-text        { font-size: 16px; }
       .contact-section   { padding: 1.5rem 2.5rem 2rem; text-align: left; max-width: 100%; }
       .contact-header    { flex-direction: column; align-items: flex-start; }
-      .contact-title     { font-size: clamp(21px, 6.17vw, 42px); }
+      .contact-title     { font-size: clamp(28px, 7.5vw, 42px); letter-spacing: -1px; }
       .contact-cta       { width: 100%; justify-content: center; font-size: 10px; padding: 0.55rem 1rem; }
       .contact-links     { flex-direction: column; border-top: none; }
       .contact-link      { padding: 1rem 0; border-right: none; border-bottom: 0.5px solid var(--border); }
@@ -771,10 +777,7 @@
   <section class="hero" id="hero">
     <div class="hero-bg"></div>
     <nav>
-      <a href="index.html" class="nav-logo">
-        <img class="logo-dark"  src="images/logo-white.png" alt="Inti Manassero"/>
-        <img class="logo-light" src="images/logo-black.png" alt="Inti Manassero"/>
-      </a>
+      <div></div>
       <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
         <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -811,28 +814,35 @@
 
   <!-- CAROUSEL -->
   <section class="carousel-section">
+    <div class="carousel-header">
+      <h2 class="carousel-title">Personal <em>Projects</em></h2>
+      <p class="carousel-hint">↓ &nbsp; tap the center card to open the project &nbsp; ↓</p>
+    </div>
     <div class="carousel-cf">
       <div class="carousel-cf-track" id="cfTrack">
-        <a href="#" class="carousel-cf-item">
+        <a href="https://www.artstation.com/artwork/LR1o6K" target="_blank" class="carousel-cf-item">
           <video autoplay muted loop playsinline>
             <source src="images/video1.mp4" type="video/mp4"/>
           </video>
         </a>
-        <a href="#" class="carousel-cf-item">
+        <a href="https://www.artstation.com/artwork/ZakzEG" target="_blank" class="carousel-cf-item">
           <video autoplay muted loop playsinline>
             <source src="images/video2.mp4" type="video/mp4"/>
           </video>
         </a>
-        <a href="#" class="carousel-cf-item">
-          <img src="images/render1.jpg" alt="Render"/>
+        <a href="https://www.artstation.com/artwork/yD2O05" target="_blank" class="carousel-cf-item top-crop">
+          <img src="images/render1.jpg" alt="Render 1"/>
         </a>
-        <a href="#" class="carousel-cf-item">
+        <a href="https://www.artstation.com/artwork/Dvwkqn" target="_blank" class="carousel-cf-item">
           <video autoplay muted loop playsinline>
             <source src="images/video3.mp4" type="video/mp4"/>
           </video>
         </a>
-        <a href="#" class="carousel-cf-item">
-          <img src="images/render2.jpg" alt="Render"/>
+        <a href="https://www.artstation.com/artwork/ZaRPqR" target="_blank" class="carousel-cf-item">
+          <img src="images/render2.jpg" alt="Render 2"/>
+        </a>
+        <a href="https://www.artstation.com/artwork/LR4mN0" target="_blank" class="carousel-cf-item">
+          <img src="images/render3.jpg" alt="Render 3"/>
         </a>
       </div>
     </div>
@@ -910,7 +920,7 @@
       <div class="contact-link">
         <span class="contact-link-label">BlenderArtists</span>
         <a href="https://blenderartists.org/u/intipazo/activity/portfolio" target="_blank">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="contact-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="contact-icon" style="opacity:0.6"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.06L2 22l4.94-1.38A9.953 9.953 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1.5 13H8V9h2.5v6zm3.5 0h-2V9h2v6z"/></svg>
           blenderartists/intipazo
         </a>
       </div>
@@ -1021,6 +1031,7 @@
           const raw = i - offset;
           const pos = ((raw % total) + total + total / 2) % total - total / 2;
           if (Math.abs(pos) > 0.5) e.preventDefault();
+          // center card opens its href in new tab — already has target="_blank"
         });
       });
     })();
