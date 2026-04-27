@@ -257,10 +257,28 @@
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('images/herobg.jpg');
-      background-size: cover;
-      background-position: 80% center;
       z-index: 0;
+      background:
+        /* noise texture via SVG */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+        /* warm gradient: lighter charcoal left, near-black right */
+        linear-gradient(105deg,
+          #2c2b28 0%,
+          #242320 30%,
+          #1a1917 60%,
+          #111110 100%);
+      background-size: 300px 300px, cover;
+      background-repeat: repeat, no-repeat;
+    }
+
+    /* if herobg.jpg is uploaded, it takes over */
+    .hero-bg.has-image {
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+        url('images/herobg.jpg');
+      background-size: 300px 300px, cover;
+      background-position: top left, 80% center;
+      background-repeat: repeat, no-repeat;
     }
 
     #hero { --grad-opacity: 0; }
@@ -302,6 +320,7 @@
       object-position: bottom left;
       display: block;
       margin-bottom: -15%;
+      mix-blend-mode: lighten;
     }
 
     .hero-title {
@@ -903,16 +922,13 @@
   </footer>
 
   <script>
-    // HERO BG — switch text dark only if background image actually loads
+    // HERO BG — try to load herobg.jpg; CSS gradient is the fallback
     (function() {
-      const heroBg = document.querySelector('.hero-bg');
-      const hero   = document.getElementById('hero');
-      if (!heroBg || !hero) return;
-      const bgUrl = getComputedStyle(heroBg).backgroundImage.replace(/url\(["']?|["']?\)/g, '');
-      if (!bgUrl || bgUrl === 'none') return;
+      const heroBgEl = document.querySelector('.hero-bg');
+      if (!heroBgEl) return;
       const img = new Image();
-      img.onload = () => hero.classList.add('hero-bg-loaded');
-      img.src = bgUrl;
+      img.onload = () => heroBgEl.classList.add('has-image');
+      img.src = 'images/herobg.jpg';
     })();
 
     // THEME
