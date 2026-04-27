@@ -982,28 +982,11 @@
       navDrawer.classList.toggle('open', open);
       navOverlay.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
-      // reset to main panel when closing
-      if (!open) navDrawer.classList.remove('portfolio-open');
     }
 
-    hamburger.addEventListener('click', () => setMenuOpen(!navDrawer.classList.contains('open')));
+    hamburger.addEventListener('click',  () => setMenuOpen(!navDrawer.classList.contains('open')));
     navOverlay.addEventListener('click', () => setMenuOpen(false));
-
-    // close on regular link clicks
-    navDrawer.querySelectorAll('a[href]').forEach(a => {
-      if (!a.closest('.nav-portfolio-grid') && !a.style.color) {
-        a.addEventListener('click', () => setMenuOpen(false));
-      }
-    });
-    navDrawer.querySelectorAll('.nav-panel a[href]:not([target="_blank"])').forEach(a => {
-      a.addEventListener('click', () => setMenuOpen(false));
-    });
-
-    // portfolio panel toggle
-    const portfolioBtn  = document.getElementById('portfolioBtn');
-    const portfolioBack = document.getElementById('portfolioBack');
-    if (portfolioBtn)  portfolioBtn.addEventListener('click',  () => navDrawer.classList.add('portfolio-open'));
-    if (portfolioBack) portfolioBack.addEventListener('click', () => navDrawer.classList.remove('portfolio-open'));
+    navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenuOpen(false)));
 
     // HERO FADE
     const heroSection = document.getElementById('hero');
