@@ -470,7 +470,7 @@
     /* =========================================================
        SECTIONS
     ========================================================= */
-    .section { padding: clamp(3rem, 5vw, 6rem) 0; }
+    .section { padding: clamp(3rem, 5vw, 6rem) 0; position: relative; z-index: 5; }
 
     .section-header {
       display: flex;
@@ -518,6 +518,9 @@
       color: #ffffff;
       margin-bottom: 1.5rem;
       text-align: justify;
+      isolation: isolate;
+      position: relative;
+      z-index: 6;
     }
 
     /* =========================================================
