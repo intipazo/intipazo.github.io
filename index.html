@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inti Manassero — 3D Artist</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
   <style>
 
     /* =========================================================
@@ -37,6 +37,9 @@
       --toggle-bg:    #1c1c1c;
       --toggle-knob:  #f0ede6;
       --text-dim:     #d0cdc6;
+      --font-title:   'Bebas Neue', sans-serif;
+      --font-sub:     'DM Sans', sans-serif;
+      --font-body:    'Syne', sans-serif;
     }
 
     [data-theme="light"] {
@@ -189,8 +192,10 @@
     .nav-drawer-links a {
       display: block;
       padding: 1.2rem 0;
-      font-size: clamp(20px, 3vw, 28px);
-      font-weight: 800;
+      font-family: var(--font-title);
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 400;
+      letter-spacing: 0.05em;
       letter-spacing: -0.5px;
       color: var(--text);
       text-decoration: none;
@@ -300,7 +305,7 @@
       mix-blend-mode: lighten;
     }
 
-    .hero-title {
+    .hero-title { font-family: var(--font-title);
       font-size: clamp(25px, 4.36vw, 60px);
       font-weight: 800;
       line-height: 0.9;
@@ -312,6 +317,8 @@
     .hero-title em { font-style: normal; font-weight: 800; }
 
     .hero-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       font-size: clamp(13px, 1.33vw, 19px);
       color: #ffffff;
       line-height: 2;
@@ -357,7 +364,7 @@
       scroll-margin-top: 0;
     }
 
-    .reel-title {
+    .reel-title { font-family: var(--font-title);
       text-align: center;
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
@@ -398,7 +405,7 @@
       padding: 0 0 1.5rem;
     }
 
-    .carousel-title {
+    .carousel-title { font-family: var(--font-title);
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       letter-spacing: -1px;
@@ -507,7 +514,7 @@
       padding: 2.5rem 5rem;
     }
 
-    .about-title {
+    .about-title { font-family: var(--font-title);
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       line-height: 1.05;
@@ -518,8 +525,9 @@
     .about-title em { font-style: normal; font-weight: 800; color: var(--text); }
 
     .about-text {
-      font-size: 19px;
-      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 300;
       line-height: 2;
       color: #ffffff;
       margin-bottom: 1.5rem;
@@ -533,8 +541,10 @@
        SKILLS BARS
     ========================================================= */
     .skills-label {
-      font-size: 14px;
-      letter-spacing: 0.16em;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 1.5rem;
@@ -551,7 +561,7 @@
       font-size: 18px;
     }
 
-    .skill-name { color: var(--muted); }
+    .skill-name { font-family: 'DM Sans', sans-serif; font-weight: 400; color: var(--muted); }
     [data-theme="dark"] .skill-name { color: var(--text-dim, #d0cdc6); }
 
     .skill-bar {
@@ -602,7 +612,7 @@
       padding: clamp(3rem, 5vw, 6rem) 5rem;
     }
 
-    .exp-section-title {
+    .exp-section-title { font-family: var(--font-title);
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       letter-spacing: -1px;
@@ -635,8 +645,10 @@
     .exp-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
 
     .exp-role-line {
-      font-size: clamp(19px, 2vw, 26px);
-      font-weight: 800;
+      font-family: var(--font-title);
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
       letter-spacing: -0.3px;
       color: var(--text);
     }
@@ -653,8 +665,9 @@
     }
 
     .exp-company-line {
-      font-size: 15px;
-      font-weight: 400;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
       letter-spacing: 0;
       color: var(--muted);
       text-transform: none;
@@ -668,7 +681,7 @@
     }
 
     .exp-period {
-      font-family: 'Syne Mono', monospace;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 400;
       color: var(--muted);
@@ -676,8 +689,9 @@
     }
 
     .exp-location {
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       color: var(--muted);
       text-align: right;
     }
@@ -709,7 +723,9 @@
     }
 
     .exp-tasks li {
+      font-family: 'DM Sans', sans-serif;
       font-size: 15px;
+      font-weight: 300;
       color: rgba(240, 237, 230, 0.75);
       line-height: 1.7;
       padding-left: 1rem;
@@ -745,7 +761,7 @@
       padding: clamp(3rem, 5vw, 6rem) 5rem;
     }
 
-    .featured-section-title {
+    .featured-section-title { font-family: var(--font-title);
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       letter-spacing: -1px;
@@ -754,6 +770,8 @@
     }
 
     .featured-section-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       font-size: 15px;
       color: var(--muted);
       margin-bottom: 3rem;
@@ -814,6 +832,8 @@
     .featured-card:hover .featured-img-overlay   { opacity: 1; }
 
     .featured-platform {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
       font-size: 11px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -822,14 +842,18 @@
     }
 
     .featured-name {
-      font-size: clamp(16px, 1.6vw, 20px);
-      font-weight: 800;
+      font-family: var(--font-title);
+      font-size: clamp(20px, 2vw, 26px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
       letter-spacing: -0.3px;
       margin-bottom: 0.3rem;
       color: var(--text);
     }
 
     .featured-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       font-size: 14px;
       color: var(--muted);
       line-height: 1.6;
@@ -862,7 +886,7 @@
       margin-bottom: 3rem;
     }
 
-    .contact-title {
+    .contact-title { font-family: var(--font-title);
       font-size: clamp(36px, 4vw, 56px);
       font-weight: 800;
       letter-spacing: -1px;
@@ -916,6 +940,8 @@
     .contact-link:last-child  { padding-right: 0; }
 
     .contact-link-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -926,6 +952,8 @@
     .contact-link a {
       display: flex;
       align-items: center;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       font-size: 12px;
       color: var(--text);
       text-decoration: none;
@@ -997,7 +1025,7 @@
 
     @media (max-width: 480px) {
       .nav-drawer { padding: 3rem 2rem; width: clamp(220px, 60vw, 280px); }
-      .hero-title { letter-spacing: -1px; }
+      .hero-title { font-family: var(--font-title); letter-spacing: -1px; }
     }
 
     /* =========================================================
@@ -1310,10 +1338,13 @@
 
   <div style="max-width:1100px; margin: 0 auto; padding: 0 5rem 3rem; display:flex; justify-content:center;">
     <a href="https://drive.google.com/drive/folders/1J0HZHTO3Pb2j2sJFteKPARsrXbZojcbi" target="_blank" class="resume-btn" style="font-size:14px; padding:1rem 2.5rem; gap:0.8rem;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
+      <svg width="18" height="18" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="currentColor"/>
+        <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="currentColor"/>
+        <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="currentColor"/>
+        <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="currentColor"/>
+        <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="currentColor"/>
+        <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 27h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="currentColor"/>
       </svg>
       <span>Open Resume</span>
     </a>
