@@ -585,6 +585,136 @@
     }
 
     /* =========================================================
+       EXPERIENCE
+    ========================================================= */
+    .exp-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(3rem, 5vw, 6rem) 5rem;
+    }
+
+    .exp-section-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      margin-bottom: 2.5rem;
+    }
+
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* each row */
+    .exp-item {
+      border-top: 0.5px solid var(--border);
+      overflow: hidden;
+    }
+    .exp-item:last-child { border-bottom: 0.5px solid var(--border); }
+
+    /* the always-visible header row */
+    .exp-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      padding: 1.75rem 0;
+      cursor: default;
+      transition: opacity 0.2s;
+    }
+
+    .exp-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
+
+    .exp-role-line {
+      font-size: clamp(17px, 1.8vw, 22px);
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .exp-company-line {
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .exp-header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.2rem;
+    }
+
+    .exp-period {
+      font-family: 'Syne Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .exp-location {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* expandable details — hidden by default, revealed on hover */
+    .exp-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.3s ease,
+                  padding 0.3s ease;
+      opacity: 0;
+      padding-bottom: 0;
+    }
+
+    .exp-item:hover .exp-details {
+      max-height: 500px;
+      opacity: 1;
+      padding-bottom: 1.75rem;
+    }
+
+    .exp-item:hover .exp-header { opacity: 0.85; }
+
+    .exp-tasks {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .exp-tasks li {
+      font-size: 15px;
+      color: rgba(240, 237, 230, 0.75);
+      line-height: 1.7;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .exp-tasks li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .exp-tasks strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+      .exp-section          { padding: 3rem 1.5rem; }
+      .exp-header           { grid-template-columns: 1fr; gap: 0.5rem; }
+      .exp-header-right     { align-items: flex-start; }
+      .exp-location         { text-align: left; }
+    }
+
+    /* =========================================================
        CONTACT
     ========================================================= */
     .contact-section {
@@ -776,6 +906,7 @@
       <li><a href="portfolio.html">Portfolio</a></li>
       <li><a href="#reel">Reel</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <p class="nav-drawer-copyright">© Inti Manassero 2026</p>
@@ -891,6 +1022,92 @@
       </div>
     </div>
   </section>
+
+  <!-- EXPERIENCE -->
+  <div class="exp-section" id="experience">
+    <h2 class="exp-section-title">Experience</h2>
+    <div class="exp-list">
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-header-left">
+            <span class="exp-role-line">3D Character Artist — Belier Arts</span>
+            <span class="exp-company-line">Character · Modeling · Texturing</span>
+          </div>
+          <div class="exp-header-right">
+            <span class="exp-period">08/2024 – 01/2025</span>
+            <span class="exp-location">Buenos Aires, Argentina (Remote)</span>
+          </div>
+        </div>
+        <div class="exp-details">
+          <ul class="exp-tasks">
+            <li>Created 3D characters for a TV advertisement, handling tasks such as <strong>high-poly modeling</strong>, retopology, and texturing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-header-left">
+            <span class="exp-role-line">3D Artist — Estupido Estudio</span>
+            <span class="exp-company-line">Modeling · Retopology · Assets</span>
+          </div>
+          <div class="exp-header-right">
+            <span class="exp-period">02/2024 – 04/2024</span>
+            <span class="exp-location">Buenos Aires, Argentina (Remote)</span>
+          </div>
+        </div>
+        <div class="exp-details">
+          <ul class="exp-tasks">
+            <li>Created 3D assets for mobile advertisements, handling tasks such as <strong>high-poly modeling</strong> and retopology.</li>
+            <li><strong>Jazmin Chebar</strong> — Modeled assets with a primary focus on creating the main character.</li>
+            <li><strong>Louis Vuitton</strong> — Modeled three large balloons, focusing on high-poly modeling.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-header-left">
+            <span class="exp-role-line">3D Character Artist — 3DAR</span>
+            <span class="exp-company-line">VR · Optimization · Character</span>
+          </div>
+          <div class="exp-header-right">
+            <span class="exp-period">06/2024 – 07/2024</span>
+            <span class="exp-location">Buenos Aires, Argentina (Remote)</span>
+          </div>
+        </div>
+        <div class="exp-details">
+          <ul class="exp-tasks">
+            <li>Worked on VR game <strong>EGG SCAPE</strong> — optimization of 3D assets (topology and textures).</li>
+            <li>07/2023 – 11/2023: Created 3D characters for an unrealised mobile game for <strong>Lionel Messi</strong>, including high-poly mesh, retopology and texturing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-header-left">
+            <span class="exp-role-line">3D Artist — ASM / Futurverse</span>
+            <span class="exp-company-line">Characters · Low-poly · NFT · Game Assets</span>
+          </div>
+          <div class="exp-header-right">
+            <span class="exp-period">09/2021 – 05/2023</span>
+            <span class="exp-location">Auckland, New Zealand (Remote)</span>
+          </div>
+        </div>
+        <div class="exp-details">
+          <ul class="exp-tasks">
+            <li>Collaborated with renowned clients such as <strong>FIFA</strong>, <strong>Muhammad Ali</strong> and <strong>Reebok</strong>.</li>
+            <li>Contributed to the <strong>FIFA AI League Game</strong> — over <strong>500k downloads</strong>. Created low-poly assets including characters and arenas.</li>
+            <li>Character creation and texture work for <strong>Muhammad Ali | The Next Legends</strong> game collection.</li>
+            <li>NFT projects: <strong>ASM AIFA All-Stars</strong> and <strong>Muhammad Ali | The Next Legends – Boxers</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- CONTACT -->
   <section class="contact-section" id="contact">
