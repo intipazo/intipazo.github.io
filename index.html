@@ -455,6 +455,12 @@
       object-position: center;
       display: block;
       pointer-events: none;
+      transition: transform 0.4s ease;
+    }
+
+    .carousel-cf-item:hover img,
+    .carousel-cf-item:hover video {
+      transform: scale(1.08);
     }
 
     .carousel-cf-item.top-crop img,
@@ -1515,10 +1521,7 @@
 
       items.forEach((item, i) => {
         item.addEventListener('click', e => {
-          const raw = i - offset;
-          const pos = ((raw % total) + total + total / 2) % total - total / 2;
-          if (Math.abs(pos) > 0.5) e.preventDefault();
-          // center card opens its href in new tab — already has target="_blank"
+          // all cards open their link regardless of position
         });
       });
     })();
